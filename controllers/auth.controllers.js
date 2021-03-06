@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
 
     req.session.userId = newUser._id;
 
-    return res.status(200).json({ user: newUser.email });
+    return res.status(200).json({ user: newUser.email, id: newUser._id });
   } catch (e) {
     if (isMongooseErrorValidation(e)) {
       return res.status(400).json({ message: "incorrect email format" });
@@ -68,8 +68,8 @@ exports.login = async (req, res) => {
     }
 
     req.session.userId = user._id;
-
-    return res.status(200).json({ user: user.email });
+    console.log(req.session);
+    return res.status(200).json({ user: user.email, id: user._id });
   } catch (e) {
     if (isMongooseErrorValidation(e)) {
       return res.status(400).json({ message: "incorrect email format" });
@@ -80,4 +80,11 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
   await req.session.destroy();
+  res.status(200).json({ message: "logout" });
+};
+
+exports.getUser = async (req, res) => {
+  const { userId } = req.session;
+  const { email, _id } = await User.findOne(userId);
+  res.status(200).json({ id: _id, email });
 };
