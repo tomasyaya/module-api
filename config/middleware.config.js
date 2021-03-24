@@ -2,8 +2,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-const origin = "http://localhost:3000";
-const corsConfig = { origin: [origin], credentials: true };
+const origin = process.env.PUBLIC_DOMAIN;
+const corsConfig = { origin, credentials: true };
 
 module.exports = (app) => {
   app.use(cors(corsConfig));
